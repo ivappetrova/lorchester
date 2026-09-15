@@ -49,8 +49,8 @@ public class MovementBehaviour : MonoBehaviour
         if (_rigidBody == null) return;
         Vector3 movement = _desiredMovementDirection.normalized;
         movement *= _movementSpeed;
-        movement.y = _rigidBody.velocity.y;
-        _rigidBody.velocity = movement;
+        movement.y = _rigidBody.linearVelocity.y;
+        _rigidBody.linearVelocity = movement;
     }
 
     private void Update()

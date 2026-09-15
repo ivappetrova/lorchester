@@ -6,7 +6,7 @@ You control two characters with different skill sets, switching between them to 
 
 ## About
 
-- **Engine:** Unity 2022.3.22f1
+- **Engine:** Unity 2022.3.62f3
 - **Genre:** 3D Platformer (side-scrolling), Puzzle
 - **Status:** Prototype
 
@@ -22,7 +22,7 @@ You control two characters with different skill sets, switching between them to 
 
 ### Prerequisites
 - Unity Hub
-- Unity `2022.3.22f1` (match the version used to create this project)
+- Unity `2022.3.62f3` (match the version used to create this project)
 
 ### Setup
 1. Clone the repo

@@ -72,7 +72,7 @@ namespace Player
         {
             if (_isFollowing)
             {
-                SnapToFollowPosition();
+                SetFollowMode();
             }
         }
 

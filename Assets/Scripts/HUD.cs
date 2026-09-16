@@ -60,7 +60,7 @@ public class HUD : MonoBehaviour
 
     private void Restart()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     void Update()

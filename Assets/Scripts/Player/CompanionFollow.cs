@@ -18,6 +18,10 @@ namespace Player
         [Tooltip("Higher = velocity reacts faster but is noisier. 8-12 works for most controllers.")]
         [SerializeField] private float velocitySmoothing = 10.0f;
 
+        [Header("Initial Facing")]
+        [Tooltip("Fallback 'behind' direction used only before any real movement has happened to compute one (i.e. the very first frame). The player moves along X only (see PlayerCharacter.HandleMovementInput), so this should be Vector3.left or Vector3.right, never a Z-axis value.")]
+        [SerializeField] private Vector3 initialBehindDirection = Vector3.left;
+
         [Header("Obstacle Avoidance")]
         [Tooltip("Layers the companion should be physically blocked by (walls, doors, etc). Do NOT include the Player/Friendly layers here.")]
         [SerializeField] private LayerMask obstacleMask = ~0;
@@ -36,7 +40,12 @@ namespace Player
 
         private Vector3 _lastPlayerPosition;
         private Vector3 _smoothedVelocity;
-        private Vector3 _behindDirection = Vector3.back;
+
+        // Seeded from initialBehindDirection in Awake (not a field initializer), so the
+        // Inspector value is actually respected. Kept separate from the tunable default so
+        // "what the user configured" is never conflated with "what the companion is
+        // currently doing".
+        private Vector3 _behindDirection;
 
         private void Awake()
         {
@@ -44,12 +53,27 @@ namespace Player
 
             if (_companionCollider is SphereCollider sphere)
             {
-                // Keep the cast radius in sync with the actual collider unless the user set a custom one.
                 castRadius = sphere.radius * transform.lossyScale.x;
                 _colliderCenterLocal = sphere.center;
             }
 
-            ResetTracking();
+            _behindDirection = initialBehindDirection.sqrMagnitude > 0.0001f
+                ? initialBehindDirection.normalized
+                : Vector3.left;
+
+            // _behindDirection keeps this seeded value until real gameplay movement in
+            // Update() recalculates it. Do not reset it from mode-switch methods below,
+            // or you throw away a perfectly good direction the moment the player takes
+            // back control.
+            ResetVelocityTracking();
+        }
+
+        private void Start()
+        {
+            if (_isFollowing)
+            {
+                SnapToFollowPosition();
+            }
         }
 
         private void Update()
@@ -59,21 +83,17 @@ namespace Player
 
             float dt = Mathf.Max(Time.deltaTime, 0.0001f);
 
-            // Raw per-frame velocity, flattened
             Vector3 delta = player.position - _lastPlayerPosition;
             _lastPlayerPosition = player.position;
             delta.y = 0f;
             Vector3 rawVelocity = delta / dt;
 
-            // Exponential smoothing: alternating stop-jitter cancels itself out here
             _smoothedVelocity = Vector3.Lerp(_smoothedVelocity, rawVelocity, 1f - Mathf.Exp(-velocitySmoothing * dt));
 
-            // Only re-aim on sustained movement, otherwise hold the last direction
             if (_smoothedVelocity.magnitude > movementThreshold)
             {
                 Vector3 desired = -_smoothedVelocity.normalized;
 
-                // Slerp is ill-defined through 180 degrees; nudge off the exact reversal
                 if (Vector3.Dot(desired, _behindDirection) < -0.999f)
                 {
                     _behindDirection = Quaternion.Euler(0f, 1f, 0f) * _behindDirection;
@@ -108,10 +128,6 @@ namespace Player
             Vector3 moveVector = desiredPosition - currentPosition;
             float moveDistance = moveVector.magnitude;
 
-            // The collider's actual center is offset from the transform origin (e.g. a
-            // SphereCollider with Center.y = 0.5) - cast from the real collider center,
-            // not the raw transform position, or the sweep will report false hits/stops
-            // before the visual object has actually reached the obstacle.
             Vector3 centerOffset = transform.TransformVector(_colliderCenterLocal);
 
             if (moveDistance > 0.0001f)
@@ -119,8 +135,6 @@ namespace Player
                 Vector3 moveDirection = moveVector / moveDistance;
                 Vector3 castOrigin = currentPosition + centerOffset;
 
-                // Sweep a sphere along the intended path; obstacleMask should only contain
-                // walls/doors/etc, never the Player or Friendly layers, so the player is never a factor here.
                 if (Physics.SphereCast(castOrigin, castRadius, moveDirection, out RaycastHit hit,
                         moveDistance, obstacleMask, QueryTriggerInteraction.Ignore))
                 {
@@ -129,10 +143,6 @@ namespace Player
                 }
             }
 
-            // Safety net: SphereCast can miss a hit if the sphere starts the frame already
-            // touching/overlapping the collider (a known Unity quirk). If the resolved
-            // destination still overlaps an obstacle, just hold the current position instead
-            // of stepping into it.
             if (Physics.CheckSphere(desiredPosition + centerOffset, castRadius, obstacleMask, QueryTriggerInteraction.Ignore))
             {
                 desiredPosition = currentPosition;
@@ -141,20 +151,20 @@ namespace Player
             transform.position = desiredPosition;
         }
 
-        private void ResetTracking()
+        private void ResetVelocityTracking()
         {
             if (player == null)
                 return;
 
             _lastPlayerPosition = player.position;
             _smoothedVelocity = Vector3.zero;
-            _behindDirection = -player.forward;
         }
 
         public void SetFollowMode()
         {
             _isFollowing = true;
-            ResetTracking();
+            ResetVelocityTracking();
+            SnapToFollowPosition();
             IgnorePlayerCollision();
         }
 
@@ -167,8 +177,18 @@ namespace Player
         public void SetPlayer(Transform newPlayer)
         {
             player = newPlayer;
-            ResetTracking();
+            ResetVelocityTracking();
+            SnapToFollowPosition();
             IgnorePlayerCollision();
+        }
+
+        private void SnapToFollowPosition()
+        {
+            if (player == null) return;
+
+            Vector3 targetPosition = player.position + _behindDirection * followDistance;
+            targetPosition.y = player.position.y + verticalOffset;
+            transform.position = targetPosition;
         }
 
         private void IgnorePlayerCollision()

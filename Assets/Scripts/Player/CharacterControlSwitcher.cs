@@ -2,10 +2,17 @@ using UnityEngine;
 
 namespace Player
 {
-        public class CharacterControlSwitcher : MonoBehaviour
+    public class CharacterControlSwitcher : MonoBehaviour
     {
         [SerializeField] private PlayerCharacter player;     
         [SerializeField] private CompanionFollow companion;  
+
+        private void Start()
+        {
+            // Ensure the game begins with the player in control and the companion snapped
+            // into its proper follow position, instead of wherever it was left in the editor.
+            SwitchToPlayer();
+        }
 
         private void Update()
         {
@@ -47,6 +54,5 @@ namespace Player
             Debug.Log("Automatically switching control back to the player.");
             SwitchToPlayer();
         }
+    }
 }
-}
-

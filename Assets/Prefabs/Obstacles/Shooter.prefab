@@ -131,6 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8351409548580131090}
   - component: {fileID: 6205459882210357398}
+  - component: {fileID: 6681566767629690063}
   - component: {fileID: 4742353358206690947}
   m_Layer: 0
   m_Name: Shooter
@@ -171,21 +172,21 @@ MonoBehaviour:
   projectilePrefab: {fileID: 2552884924262654872, guid: d475712c6fbaad1438c0cf07f3a7adb8, type: 3}
   bulletSocket: {fileID: 5444636549420517915}
   shootInterval: 2
-  _shootEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4742353358206690947}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  soundEmitter: {fileID: 6681566767629690063}
+--- !u!114 &6681566767629690063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6237674788521057583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be15a93f451f4f46a79571f9725bea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Utils.SoundEmitter
+  audioSource: {fileID: 4742353358206690947}
+  defaultClip: {fileID: 8300000, guid: f548d11347bef8445bdebc7620724629, type: 3}
 --- !u!82 &4742353358206690947
 AudioSource:
   m_ObjectHideFlags: 0
@@ -197,8 +198,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: f548d11347bef8445bdebc7620724629, type: 3}
-  m_PlayOnAwake: 1
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 0.3
   m_Pitch: 1
   Loop: 0

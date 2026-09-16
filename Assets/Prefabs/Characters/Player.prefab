@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8617126849232942639}
   - component: {fileID: 4545241713804749432}
   - component: {fileID: 1096560411250044901}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 7166472012039463020}
   - component: {fileID: 4277178491600013171}
   - component: {fileID: 8652649414866262754}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 5086637401522820578}
   - component: {fileID: 3812503307018099061}
   - component: {fileID: 8587819085793613262}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -232,16 +232,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f4a79cf2298e734b9bda73f01b0a3d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startLives: 3
+  startLives: 3
   bodyRenderer: {fileID: 1096560411250044901}
   shoulderRenderer: {fileID: 8652649414866262754}
   companionRenderer: {fileID: 0}
   damageColor: {r: 0.70440245, g: 0.43637505, b: 0.43637505, a: 1}
   colorChangeDuration: 0.2
-  _onDamageEvent:
+  onDamageEvent:
     m_PersistentCalls:
       m_Calls: []
-  _onDeathEvent:
+  onDeathEvent:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &1717888172461464859
@@ -256,13 +256,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db1d1e520cf0b404689bd7b35b1e64eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputAsset: {fileID: -944628639613478452, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
-  _movementAction: {fileID: -4918524502594382909, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
-  _interactAction:
+  inputAsset: {fileID: -944628639613478452, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
+  movementAction: {fileID: -4918524502594382909, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
+  interactAction:
     m_Name: Interact
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 6fc39a93-d368-418f-b40b-8817e9683acf
+    m_Id: a328402d-406f-49b7-b0fc-0c524e4845c4
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
@@ -279,9 +279,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb288c43e1db55c41b437a94ebb6ea04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shoulderObject: {fileID: 8928883477933747288}
-  _movementSpeed: 8
-  _jumpStrength: 20
+  shoulderObject: {fileID: 8928883477933747288}
+  movementSpeed: 8
+  jumpStrength: 18
 --- !u!114 &2865637729444513702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,8 +294,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc9f1e29c02fab4a9e460b9bf53350b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gunTemplate: {fileID: 7909360912958175282, guid: 2d86795cf0858204792495a12594757b, type: 3}
-  _socket: {fileID: 8402966298342501804}
+  gunTemplate: {fileID: 7909360912958175282, guid: 2d86795cf0858204792495a12594757b, type: 3}
+  socket: {fileID: 8402966298342501804}
 --- !u!114 &5086637401522820578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,7 +356,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 120
   m_CollisionDetection: 0
 --- !u!1 &8402966298342501804
@@ -368,8 +368,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 221158430928216993}
-  m_Layer: 6
-  m_Name: Weapon
+  m_Layer: 12
+  m_Name: WeaponSocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -399,7 +399,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8503252989340825896}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: Shoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

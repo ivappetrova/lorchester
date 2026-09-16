@@ -91,6 +91,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -112,9 +117,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5539455520313562751
 GameObject:
@@ -205,6 +212,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -226,9 +238,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7909360912958175282
 GameObject:
@@ -240,6 +254,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3669279323424190791}
   - component: {fileID: 642641974271518541}
+  - component: {fileID: 4777125681972089741}
   - component: {fileID: -3958452495918128223}
   m_Layer: 0
   m_Name: BasicWeapon
@@ -277,25 +292,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486bcfe34eb0a694995e82dc661178fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletTemplate: {fileID: 2552884924262654872, guid: 056a607b3d565ac4280ae22ffb563537, type: 3}
-  _fireRate: 1
-  _fireSockets:
+  bulletTemplate: {fileID: 2552884924262654872, guid: 056a607b3d565ac4280ae22ffb563537, type: 3}
+  fireRate: 1
+  fireSockets:
   - {fileID: 7359406725722945796}
-  _onFireEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: -3958452495918128223}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  soundEmitter: {fileID: 4777125681972089741}
+--- !u!114 &4777125681972089741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7909360912958175282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be15a93f451f4f46a79571f9725bea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Utils.SoundEmitter
+  audioSource: {fileID: -3958452495918128223}
+  defaultClip: {fileID: 8300000, guid: 6643f8755dcc0644692cf376ae3d765f, type: 3}
 --- !u!82 &-3958452495918128223
 AudioSource:
   m_ObjectHideFlags: 0
@@ -306,7 +321,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6643f8755dcc0644692cf376ae3d765f, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

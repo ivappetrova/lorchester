@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1221003686221548752}
   - component: {fileID: 5376855663083146379}
   - component: {fileID: 4482459276817866159}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Platform
   m_TagString: ButtonDoor
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 2536224810724165035}
   - component: {fileID: 5334912980948958863}
   - component: {fileID: 130483347762994726}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}

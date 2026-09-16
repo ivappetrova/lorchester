@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 9077415398163193242}
   m_Layer: 6
   m_Name: Companion
-  m_TagString: Player
+  m_TagString: Companion
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,13 +51,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db1d1e520cf0b404689bd7b35b1e64eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputAsset: {fileID: -944628639613478452, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
-  _movementAction: {fileID: -4918524502594382909, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
-  _interactAction:
+  inputAsset: {fileID: -944628639613478452, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
+  movementAction: {fileID: -4918524502594382909, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
+  interactAction:
     m_Name: Interact
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 1d3ee7ff-43f6-4cbd-8955-a8eedc0b168d
+    m_Id: 64136ded-71ec-49d6-9f45-c79f51eada91
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
@@ -74,10 +74,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e9db48aa824d1479fbc7ca987993b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputAsset: {fileID: -944628639613478452, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
-  _verticalMovementAction: {fileID: 7658636032154500756, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
-  _horizontalMovementAction: {fileID: -4918524502594382909, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
-  _flySpeed: 5
+  inputAsset: {fileID: -944628639613478452, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
+  verticalMovementAction: {fileID: 7658636032154500756, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
+  horizontalMovementAction: {fileID: -4918524502594382909, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
+  flySpeed: 5
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 513
+  castRadius: 0.4
+  skinWidth: 0.05
 --- !u!114 &7348318106912643050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,12 +96,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  followDistance: -1.5
+  followDistance: 1.5
   verticalOffset: 1.5
   followSpeed: 4
-  collisionLayer:
+  directionTurnSpeed: 6
+  movementThreshold: 0.75
+  velocitySmoothing: 10
+  obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 513
+  castRadius: 0.4
+  skinWidth: 0.05
+  debugDrawDirection: 0
 --- !u!114 &5391780846874311506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,9 +120,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb288c43e1db55c41b437a94ebb6ea04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shoulderObject: {fileID: 0}
-  _movementSpeed: 5
-  _jumpStrength: 20
+  shoulderObject: {fileID: 0}
+  movementSpeed: 1
+  jumpStrength: 10
 --- !u!114 &1723865518369134434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +181,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 120
   m_CollisionDetection: 0
 --- !u!1 &6990454351119661954

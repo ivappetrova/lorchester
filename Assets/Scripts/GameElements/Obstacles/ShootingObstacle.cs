@@ -1,5 +1,5 @@
-using Utils;
 using UnityEngine;
+using Utils;
 
 namespace GameElements.Obstacles
 {
@@ -16,6 +16,10 @@ namespace GameElements.Obstacles
         {
             if (soundEmitter == null)
                 soundEmitter = GetComponent<SoundEmitter>();
+
+            // Dormant until a ZoneController explicitly activates this shooter - no
+            // per-frame work happens until then.
+            enabled = false;
         }
 
         private void Update()
@@ -26,6 +30,18 @@ namespace GameElements.Obstacles
             {
                 ShootProjectile();
                 _shootTimer = shootInterval;
+            }
+        }
+
+        // Called by ZoneController when the player crosses this zone's entrance/exit.
+        public void SetActive(bool active)
+        {
+            Debug.Log($"[{name}] SetActive({active}) called - enabled was {enabled}");
+            enabled = active;
+
+            if (active)
+            {
+                _shootTimer = 0f;
             }
         }
 

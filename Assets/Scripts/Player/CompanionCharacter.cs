@@ -84,43 +84,42 @@ namespace Player
         {
             if (MovementBehaviour == null) return;
 
-            // Combine vertical and horizontal input for smooth movement
-            Vector3 verticalMovement = Vector3.up * (_verticalInput * flySpeed * Time.deltaTime);
+            Vector3 centerOffset = transform.TransformVector(_colliderCenterLocal);
+            Vector3 currentPosition = transform.position;
+
+            // Resolve each axis separately so a wall blocking horizontal motion
+            // doesn't also block unrelated vertical motion (and vice versa).
             Vector3 horizontalMovement = Vector3.right * (_horizontalInput * flySpeed * Time.deltaTime);
+            currentPosition = MoveAxis(currentPosition, horizontalMovement, centerOffset);
 
-            Vector3 moveVector = verticalMovement + horizontalMovement;
+            Vector3 verticalMovement = Vector3.up * (_verticalInput * flySpeed * Time.deltaTime);
+            currentPosition = MoveAxis(currentPosition, verticalMovement, centerOffset);
+
+            transform.position = currentPosition;
+        }
+
+        private Vector3 MoveAxis(Vector3 currentPosition, Vector3 moveVector, Vector3 centerOffset)
+        {
             float moveDistance = moveVector.magnitude;
+            if (moveDistance <= 0.0001f) return currentPosition;
 
-            if (moveDistance > 0.0001f)
+            Vector3 moveDirection = moveVector / moveDistance;
+            Vector3 castOrigin = currentPosition + centerOffset;
+            Vector3 desiredPosition = currentPosition + moveVector;
+
+            if (Physics.SphereCast(castOrigin, castRadius, moveDirection, out RaycastHit hit,
+                    moveDistance, obstacleMask, QueryTriggerInteraction.Ignore))
             {
-                Vector3 moveDirection = moveVector / moveDistance;
-                Vector3 currentPosition = transform.position;
-                Vector3 desiredPosition = currentPosition + moveVector;
-
-                // The collider's actual center is offset from the transform origin (e.g. a
-                // SphereCollider with Center.y = 0.5) - cast from the real collider center,
-                // not the raw transform position, or the sweep will report false hits/stops
-                // before the visual object has actually reached the obstacle.
-                Vector3 centerOffset = transform.TransformVector(_colliderCenterLocal);
-                Vector3 castOrigin = currentPosition + centerOffset;
-
-                // Sweep along the intended path so flying doesn't pass through walls/doors.
-                // obstacleMask should only contain walls/doors, never Player or Friendly.
-                if (Physics.SphereCast(castOrigin, castRadius, moveDirection, out RaycastHit hit,
-                        moveDistance, obstacleMask, QueryTriggerInteraction.Ignore))
-                {
-                    float safeDistance = Mathf.Max(hit.distance - skinWidth, 0f);
-                    desiredPosition = currentPosition + moveDirection * safeDistance;
-                }
-
-                // Safety net for the same start-overlap sweep quirk as CompanionFollow.
-                if (Physics.CheckSphere(desiredPosition + centerOffset, castRadius, obstacleMask, QueryTriggerInteraction.Ignore))
-                {
-                    desiredPosition = currentPosition;
-                }
-
-                transform.position = desiredPosition;
+                float safeDistance = Mathf.Max(hit.distance - skinWidth, 0f);
+                desiredPosition = currentPosition + moveDirection * safeDistance;
             }
+
+            if (Physics.CheckSphere(desiredPosition + centerOffset, castRadius, obstacleMask, QueryTriggerInteraction.Ignore))
+            {
+                desiredPosition = currentPosition;
+            }
+
+            return desiredPosition;
         }
 
         public override void EnableControl()

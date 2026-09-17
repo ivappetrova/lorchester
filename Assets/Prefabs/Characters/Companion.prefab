@@ -77,7 +77,7 @@ MonoBehaviour:
   inputAsset: {fileID: -944628639613478452, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
   verticalMovementAction: {fileID: 7658636032154500756, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
   horizontalMovementAction: {fileID: -4918524502594382909, guid: f7bc4a44e10265f498bdc9b0344cdd7a, type: 3}
-  flySpeed: 5
+  flySpeed: 15
   obstacleMask:
     serializedVersion: 2
     m_Bits: 513
@@ -102,6 +102,7 @@ MonoBehaviour:
   directionTurnSpeed: 6
   movementThreshold: 0.75
   velocitySmoothing: 10
+  initialBehindDirection: {x: -1, y: 0, z: 0}
   obstacleMask:
     serializedVersion: 2
     m_Bits: 513
@@ -121,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shoulderObject: {fileID: 0}
-  movementSpeed: 1
+  movementSpeed: 3
   jumpStrength: 10
 --- !u!114 &1723865518369134434
 MonoBehaviour:
@@ -180,7 +181,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 1
   m_Constraints: 120
   m_CollisionDetection: 0

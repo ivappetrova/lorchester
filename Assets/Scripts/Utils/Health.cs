@@ -35,45 +35,43 @@ namespace Utils
 
         [SerializeField] private float colorChangeDuration = 1f;
 
+        [Tooltip("Minimum time (seconds) between damage instances - prevents a single overlap (e.g. two colliders/triggers firing the same frame, or staying inside a trigger across frames) from registering as multiple hits.")]
+        [SerializeField] private float damageCooldown = 1f;
+        private float _lastDamageTime = -Mathf.Infinity;
+
         [SerializeField] private UnityEvent onDamageEvent;
         [SerializeField] private UnityEvent onDeathEvent;
-
-        // Shader color property ID
-        private static readonly int ColorProperty = Shader.PropertyToID("_Color");
 
         private void Awake()
         {
             _currentLives = startLives;
             _player = GetComponent<PlayerCharacter>();
 
-            // Store the original body color
-            if (bodyRenderer != null && bodyRenderer.material.HasProperty(ColorProperty))
+            if (bodyRenderer != null)
             {
                 _originalBodyColor = bodyRenderer.material.color;
             }
             else
             {
-                Debug.LogError("Body Renderer or Material does not have a '_Color' property!");
+                Debug.LogError("Body Renderer is not assigned!");
             }
 
-            // Store the original shoulder color
-            if (shoulderRenderer != null && shoulderRenderer.material.HasProperty(ColorProperty))
+            if (shoulderRenderer != null)
             {
                 _originalShoulderColor = shoulderRenderer.material.color;
             }
             else
             {
-                Debug.LogError("Shoulder Renderer or Material does not have a '_Color' property!");
+                Debug.LogError("Shoulder Renderer is not assigned!");
             }
 
-            // Store the original companion color
-            if (companionRenderer != null && companionRenderer.material.HasProperty(ColorProperty))
+            if (companionRenderer != null)
             {
                 _originalCompanionColor = companionRenderer.material.color;
             }
             else
             {
-                Debug.LogError("Companion Renderer or Material does not have a '_Color' property!");
+                Debug.LogError("Companion Renderer is not assigned!");
             }
         }
 
@@ -83,6 +81,15 @@ namespace Utils
             {
                 return;
             }
+
+            // Ignore repeated damage calls that land within damageCooldown of the last hit -
+            // e.g. player+companion colliders both overlapping the same thorn in one frame,
+            // or the trigger firing again before the object has moved out of it.
+            if (Time.time - _lastDamageTime < damageCooldown)
+            {
+                return;
+            }
+            _lastDamageTime = Time.time;
 
             _currentLives -= damageAmount;
 
@@ -125,60 +132,49 @@ namespace Utils
                 yield break;
             }
 
-            // Change all renderers to damage color
-            if (bodyRenderer != null)
-            {
-                bodyRenderer.material.SetColor(ColorProperty, damageColor);
-            }
-
-            if (shoulderRenderer != null)
-            {
-                shoulderRenderer.material.SetColor(ColorProperty, damageColor);
-            }
-
-            if (companionRenderer != null)
-            {
-                companionRenderer.material.SetColor(ColorProperty, damageColor);
-            }
+            SetBodyColor(damageColor);
 
             yield return new WaitForSeconds(colorChangeDuration);
 
-            // Restore original colors
             if (!_isGameOver)
             {
                 if (bodyRenderer != null)
                 {
-                    bodyRenderer.material.SetColor(ColorProperty, _originalBodyColor);
+                    bodyRenderer.material.color = _originalBodyColor;
                 }
 
                 if (shoulderRenderer != null)
                 {
-                    shoulderRenderer.material.SetColor(ColorProperty, _originalShoulderColor);
+                    shoulderRenderer.material.color = _originalShoulderColor;
                 }
 
                 if (companionRenderer != null)
                 {
-                    companionRenderer.material.SetColor(ColorProperty, _originalCompanionColor);
+                    companionRenderer.material.color = _originalCompanionColor;
                 }
             }
         }
 
-        // Set color permanently when the player dies
         private void SetColorsToRed()
+        {
+            SetBodyColor(damageColor);
+        }
+
+        private void SetBodyColor(Color color)
         {
             if (bodyRenderer != null)
             {
-                bodyRenderer.material.SetColor(ColorProperty, damageColor);
+                bodyRenderer.material.color = color;
             }
 
             if (shoulderRenderer != null)
             {
-                shoulderRenderer.material.SetColor(ColorProperty, damageColor);
+                shoulderRenderer.material.color = color;
             }
 
             if (companionRenderer != null)
             {
-                companionRenderer.material.SetColor(ColorProperty, damageColor);
+                companionRenderer.material.color = color;
             }
         }
     }
